@@ -1,0 +1,26 @@
+from ubidots import ApiClient
+import time
+import sys
+import Adafruit_DHT
+
+sensor = Adafruit_DHT.DHT11
+pin = 25
+
+api = ApiClient(token='BBFF-555THCwsHjLSWPXTwZXCAcwhXuM5dq')
+
+try:
+    variable1 = api.get_variable("64dc87f26c94f21e2fee9172")
+    variable2 = api.get_variable("64dc839f9dec321d370f4cad")
+
+except ValueError:
+    print ("It is not possible to obtain the variable")
+
+while(1):
+    try:
+        humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
+        variable1.save_value({'value': humidity})
+        variable2.save_value({'value': temperature})
+        print ("data terkirim")
+        time.sleep(120)
+    except ValueError:
+        print ("data tidak terkirim")
